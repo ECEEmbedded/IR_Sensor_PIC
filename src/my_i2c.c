@@ -82,8 +82,6 @@ void i2c_int_handler() {
     unsigned char overrun_error = 0;
     unsigned char error_buf[3];
 
-//    LATCbits.LATC0 = !LATCbits.LATC0;
-
     // clear SSPOV
     if (SSPCON1bits.SSPOV == 1) {
         SSPCON1bits.SSPOV = 0;
@@ -97,7 +95,6 @@ void i2c_int_handler() {
     }
     // read something if it is there
     if (SSPSTATbits.BF == 1) {
-//LATCbits.LATC2 = !LATCbits.LATC2;
         i2c_data = SSPBUF;
         data_read = 1;
     }
