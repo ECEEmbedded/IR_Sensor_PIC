@@ -108,7 +108,7 @@ void main(void) {
     OpenTimer0(TIMER_INT_ON & T0_16BIT & T0_SOURCE_INT & T0_PS_1_128);
 #ifdef __USE18F26J50
     // MTJ added second argument for OpenTimer1()
-    OpenTimer1(TIMER_INT_ON & T1_SOURCE_FOSC_4 & T1_PS_1_8 & T1_16BIT_RW & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF,0x0);
+    OpenTimer1(TIMER_INT_ON & T1_SOURCE_FOSC & T1_PS_1_1 & T1_16BIT_RW & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF,0x0);
 #else
     OpenTimer1(TIMER_INT_ON & T1_PS_1_8 & T1_16BIT_RW & T1_SOURCE_INT & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF);
 #endif
@@ -167,10 +167,6 @@ void main(void) {
                 case MSGT_I2C_DATA:
                 {
                   unsigned char a = msgbuffer[4];
-                  LATCbits.LATC0 = a & 0x1; 
-                  LATCbits.LATC1 = a & 0x2;
-                  LATCbits.LATC2 = a & 0x4;
-                  LATCbits.LATC6 = a & 0x8;
                   break;
                 }
                 case MSGT_I2C_DBG:
@@ -201,7 +197,6 @@ void main(void) {
                 case MSGT_TIMER1:
                 {
                     //timer1_lthread(&t1thread_data, msgtype, length, msgbuffer);
-                    LATCbits.LATC0 = !LATCbits.LATC0;
                     adcReadyNextRead();
                     break;
                 };
@@ -210,17 +205,18 @@ void main(void) {
                     unsigned short ADCreading = (msgbuffer[1] << 8) | msgbuffer[2];
 #ifdef DEBUG
                     if (msgbuffer[0] == 1 ){
-                        dbgPrintByte((char)(ADCreading >> 8));
-                        dbgPrintByte((char)(ADCreading & 0xFF));
+                        dbgPrintByte(0x5A);
                     }
+                    else
+                        dbgPrintByte(0xA3);
 #endif
                     ADCreading = 96563 / ADCreading - 16; // Convert V to Range
-#ifdef DEBUG
-                    if (msgbuffer[0] == 1 ){
-                        dbgPrintByte((char)(ADCreading >> 8));
-                        dbgPrintByte((char)(ADCreading & 0xFF));
-                    }
-#endif
+//#ifdef DEBUG
+//                    if (msgbuffer[0] == 1 ){
+//                        dbgPrintByte((char)(ADCreading >> 8));
+//                        dbgPrintByte((char)(ADCreading & 0xFF));
+//                    }
+//#endif
                     msgbuffer[1] = msgbuffer[0]; // sensor #
                     msgbuffer[0] = 0x4F; // message data
                     msgbuffer[3] = sensor_reading_count++; // count
