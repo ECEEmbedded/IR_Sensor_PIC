@@ -108,7 +108,7 @@ void main(void) {
     OpenTimer0(TIMER_INT_ON & T0_16BIT & T0_SOURCE_INT & T0_PS_1_128);
 #ifdef __USE18F26J50
     // MTJ added second argument for OpenTimer1()
-    OpenTimer1(TIMER_INT_ON & T1_SOURCE_FOSC & T1_PS_1_1 & T1_16BIT_RW & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF,0x0);
+    OpenTimer1(TIMER_INT_ON & T1_SOURCE_FOSC_4 & T1_PS_1_4 & T1_16BIT_RW & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF,0x0);
 #else
     OpenTimer1(TIMER_INT_ON & T1_PS_1_8 & T1_16BIT_RW & T1_SOURCE_INT & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF);
 #endif
@@ -203,13 +203,12 @@ void main(void) {
                 case MSG_ADC_DATA:
                 {
                     unsigned short ADCreading = (msgbuffer[1] << 8) | msgbuffer[2];
-#ifdef DEBUG
-                    if (msgbuffer[0] == 1 ){
-                        dbgPrintByte(0x5A);
-                    }
-                    else
-                        dbgPrintByte(0xA3);
-#endif
+//#ifdef DEBUG
+//                    if (msgbuffer[0] <= 4 ){
+//                        dbgPrintByte(msgbuffer[1]);
+//                        dbgPrintByte(msgbuffer[2]);
+//                    }
+//#endif
                     ADCreading = 96563 / ADCreading - 16; // Convert V to Range
 //#ifdef DEBUG
 //                    if (msgbuffer[0] == 1 ){
