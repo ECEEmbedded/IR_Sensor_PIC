@@ -29,6 +29,9 @@
 #include <p18cxxx.h>
 #endif
 
+#define IR_MESSAGE  0x12
+#define IR_EMPTY_MESSAGE    0x52
+
 // Message type definitions
 #define MSGT_TIMER0 10
 #define MSGT_TIMER1 11

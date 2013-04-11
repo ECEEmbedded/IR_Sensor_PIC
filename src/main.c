@@ -13,7 +13,7 @@
 #endif
 #include "interrupts.h"
 #include "messages.h"
-#include "DebugOut.h"
+#include "debug.h"
 //#include "my_uart.h"
 #include "my_i2c.h"
 //#include "uart_thread.h"
@@ -145,6 +145,7 @@ void main(void) {
         // messages queues has a message (this may put the processor into
         // an idle mode)
         block_on_To_msgqueues();
+        DebugPrint(0x00);
 
         // At this point, one or both of the queues has a message.  It
         // makes sense to check the high-priority messages first -- in fact,
@@ -204,10 +205,9 @@ void main(void) {
                 {
                     unsigned short ADCreading = (msgbuffer[1] << 8) | msgbuffer[2];
 //#ifdef DEBUG
-//                    if (msgbuffer[0] <= 4 ){
-//                        dbgPrintByte(msgbuffer[1]);
-//                        dbgPrintByte(msgbuffer[2]);
-//                    }
+                    DebugPrint(msgbuffer[0]);
+                    DebugPrint(msgbuffer[1]);
+                    DebugPrintByte(msgbuffer[2]);
 //#endif
                     ADCreading = 96563 / ADCreading - 16; // Convert V to Range
 //#ifdef DEBUG
@@ -217,7 +217,7 @@ void main(void) {
 //                    }
 //#endif
                     msgbuffer[1] = msgbuffer[0]; // sensor #
-                    msgbuffer[0] = 0x4F; // message data
+                    msgbuffer[0] = IR_MESSAGE; // message data
                     msgbuffer[3] = sensor_reading_count++; // count
                     msgbuffer[4] = (char)(ADCreading >> 8);
                     msgbuffer[5] = (char)(ADCreading & 0x00FF);

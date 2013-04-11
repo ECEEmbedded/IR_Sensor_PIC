@@ -19,7 +19,7 @@ void start_i2c_slave_reply(/*unsigned char length, unsigned char *msg*/) {
 
     if (len == MSGQUEUE_EMPTY) {
         ic_ptr->outbuflen = 8;
-        ic_ptr->outbuffer[0] = 0x4F;
+        ic_ptr->outbuffer[0] = IR_EMPTY_MESSAGE;
         
         unsigned char i;
         for (i = 1; i < 8; ++i)
